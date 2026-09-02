@@ -1,0 +1,10 @@
+{
+  "name": "Smart Antimicrobial Nanofiber Film - Wound Analysis & Healing Monitor",
+  "description": "Image-based wound monitoring and segmentation platform with local contrast filtering, tissue classification (granulation, slough, necrosis), baseline tracking, and nanofiber film healing analytics.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
