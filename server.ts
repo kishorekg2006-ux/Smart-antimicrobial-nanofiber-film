@@ -64,6 +64,25 @@ app.post('/api/gemini/wound-assessment', async (req: Request, res: Response) => 
       const area = Number(metrics?.wound_area || 0);
       const redness = Number(metrics?.redness || 0);
       const yellow = Number(metrics?.yellow || 0);
+      const isNoWound = metrics?.wound_pixels === 0 || metrics?.condition === 'No Wound Detected' || area === 0;
+
+      if (isNoWound) {
+        return res.json({
+          woundStage: 'Intact Dermis / No Wound Detected',
+          tissueEtiology: 'Healthy dermis and epidermis without active ulcerative disruption, slough, or tissue loss.',
+          infectionRiskLevel: 'Low',
+          biofilmProbability: 'None (Intact Epithelial Barrier)',
+          nanofiberRecommendation: 'No active antimicrobial nanofiber dressing required. Dermal integrity intact.',
+          healingTrajectory: 'Skin surface intact. No active wound lesion present.',
+          clinicalActionItems: [
+            'Continue standard daily skin hygiene and preventive skincare.',
+            'No specialized therapeutic dressing application required.',
+            'Maintain protective barrier and periodic routine observation.'
+          ],
+          isGeneratedByAI: false
+        });
+      }
+
       const healing = baseline ? Math.max(0, Math.min(100, ((baseline.area - area) / (baseline.area || 1)) * 100)) : 0;
 
       let risk: 'Low' | 'Moderate' | 'High' | 'Critical' = 'Low';

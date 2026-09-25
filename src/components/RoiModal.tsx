@@ -21,10 +21,12 @@ export const RoiModal: React.FC<RoiModalProps> = ({
   const [currentRect, setCurrentRect] = useState<ROI | null>(null);
   const [imageObj, setImageObj] = useState<HTMLImageElement | null>(null);
   const [scaleFactor, setScaleFactor] = useState(1);
+  const [warningNotice, setWarningNotice] = useState<string>('');
 
   // Load image onto canvas on open
   useEffect(() => {
     if (!isOpen || !imageSrc) return;
+    setWarningNotice('');
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -135,9 +137,10 @@ export const RoiModal: React.FC<RoiModalProps> = ({
 
   const handleRunRoi = () => {
     if (!currentRect || Math.abs(currentRect.x2 - currentRect.x1) < 8 || Math.abs(currentRect.y2 - currentRect.y1) < 8) {
-      alert('Please draw a bounding box around the wound region first.');
+      setWarningNotice('Please click and drag to draw a bounding box around the wound region first.');
       return;
     }
+    setWarningNotice('');
 
     // Convert canvas coordinates back to original image scale
     const originalRoi: ROI = {
@@ -182,6 +185,13 @@ export const RoiModal: React.FC<RoiModalProps> = ({
             Click and drag your mouse across the wound area. The bounding box only restricts the automatic color-contrast search space; the box itself is <b>not</b> counted as wound area.
           </span>
         </div>
+
+        {warningNotice && (
+          <div className="w-full bg-rose-50 border border-rose-200 rounded-lg p-2.5 mb-3 text-xs text-rose-800 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+            <span className="font-semibold">{warningNotice}</span>
+          </div>
+        )}
 
         {/* Interactive Canvas */}
         <div className="bg-slate-900 rounded-xl p-2 border border-slate-200 shadow-inner flex items-center justify-center overflow-auto max-w-full">

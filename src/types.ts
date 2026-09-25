@@ -1,47 +1,47 @@
 export interface WoundThresholds {
-  redRatioMin: number;      // Default: 0.018
-  localRedMin: number;      // Default: 0.004
+  redRatioMin: number;      // Default: 0.025
+  localRedMin: number;      // Default: 0.010
   minSaturationRed: number; // Default: 20
   minValueRed: number;       // Default: 35
   
-  pinkAMin: number;         // Default: 132
-  pinkLocalAMin: number;    // Default: 2.0
-  pinkSatMin: number;       // Default: 18
+  pinkAMin: number;         // Default: 134
+  pinkLocalAMin: number;    // Default: 3.5
+  pinkSatMin: number;       // Default: 20
   
-  sloughAMin: number;       // Default: 118
-  sloughBMin: number;       // Default: 125
-  sloughLocalBMin: number;  // Default: 1.5
-  sloughLocalLMax: number;  // Default: 18
-  sloughSatMin: number;     // Default: 20
+  sloughAMin: number;       // Default: 124
+  sloughBMin: number;       // Default: 132
+  sloughLocalBMin: number;  // Default: 3.0
+  sloughLocalLMax: number;  // Default: 14
+  sloughSatMin: number;     // Default: 22
   
-  darkLocalLMax: number;    // Default: -14
-  darkValueMax: number;     // Default: 215
-  darkSatMax: number;       // Default: 150
+  darkLocalLMax: number;    // Default: -16
+  darkValueMax: number;     // Default: 140
+  darkSatMax: number;       // Default: 140
 
-  maxAreaRatio: number;     // Default: 0.06 (6%)
-  minAreaPixels: number;    // Default: 18
+  maxAreaRatio: number;     // Default: 0.65
+  minAreaPixels: number;    // Default: 35
   gaussianSigmaRed: number; // Default: 9
   gaussianSigmaLab: number; // Default: 11
 }
 
 export const DEFAULT_THRESHOLDS: WoundThresholds = {
-  redRatioMin: 0.018,
-  localRedMin: 0.004,
+  redRatioMin: 0.025,
+  localRedMin: 0.010,
   minSaturationRed: 20,
   minValueRed: 35,
-  pinkAMin: 132,
-  pinkLocalAMin: 2.0,
-  pinkSatMin: 18,
-  sloughAMin: 118,
-  sloughBMin: 125,
-  sloughLocalBMin: 1.5,
-  sloughLocalLMax: 18,
-  sloughSatMin: 20,
-  darkLocalLMax: -14,
-  darkValueMax: 215,
-  darkSatMax: 150,
-  maxAreaRatio: 0.06,
-  minAreaPixels: 18,
+  pinkAMin: 134,
+  pinkLocalAMin: 3.5,
+  pinkSatMin: 20,
+  sloughAMin: 124,
+  sloughBMin: 132,
+  sloughLocalBMin: 3.0,
+  sloughLocalLMax: 14,
+  sloughSatMin: 22,
+  darkLocalLMax: -16,
+  darkValueMax: 140,
+  darkSatMax: 140,
+  maxAreaRatio: 0.65,
+  minAreaPixels: 35,
   gaussianSigmaRed: 9,
   gaussianSigmaLab: 11,
 };
@@ -114,3 +114,64 @@ export interface AIClinicalAssessment {
   healingTrajectory: string;
   clinicalActionItems: string[];
 }
+
+// Telemedicine Data Models
+export interface PatientUser {
+  id: string;
+  name: string;
+  age: number;
+  mobileNumber: string;
+  registeredAt: string;
+  gender?: string;
+  medicalNotes?: string;
+}
+
+export interface DoctorUser {
+  id: string;
+  name: string;
+  licenseNumber: string;
+  specialty: string;
+  hospitalAffiliation?: string;
+  email?: string;
+}
+
+export interface DoctorReview {
+  id: string;
+  doctorName: string;
+  doctorLicense: string;
+  reviewedAt: string;
+  healingStatus: 'Improving' | 'Stable / Stagnant' | 'Critical / Deteriorating' | 'Healed';
+  infectionRisk: 'Low' | 'Moderate' | 'High' | 'Critical';
+  clinicalNotes: string;
+  dressingPrescription: string;
+  dressingChangeInterval: string;
+  additionalInstructions: string;
+}
+
+export interface WoundUpdateSubmission {
+  id: string;
+  patientId: string;
+  patientName: string;
+  patientAge: number;
+  patientMobile: string;
+  submittedAt: string;
+  imageName: string;
+  dayLabel?: string;
+  originalImage: string;
+  segmentationImage: string;
+  markedImage: string;
+  woundAreaPercent: number;
+  woundPixels: number;
+  totalPixels: number;
+  rednessPercent: number;
+  yellowPercent: number;
+  pinkPercent?: number;
+  darkPercent?: number;
+  confidencePercent: number;
+  condition: string;
+  patientSymptoms?: string;
+  painScale?: number; // 0 - 10
+  status: 'Pending Review' | 'Reviewed' | 'Urgent Attention';
+  doctorReview?: DoctorReview;
+}
+

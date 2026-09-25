@@ -10,7 +10,10 @@ import {
   Camera, 
   Image as ImageIcon,
   CheckCircle2,
-  Clock
+  Clock,
+  Send,
+  Stethoscope,
+  Trash2
 } from 'lucide-react';
 
 interface ControlsBarProps {
@@ -21,6 +24,7 @@ interface ControlsBarProps {
   baselineName: string | null;
   statusText: string;
   isLoading: boolean;
+  hasAnalysisResult?: boolean;
   onPrev: () => void;
   onNext: () => void;
   onAnalyze: () => void;
@@ -29,6 +33,9 @@ interface ControlsBarProps {
   onUpload: (files: File[]) => void;
   onOpenRoiModal: () => void;
   onOpenCamera: () => void;
+  onSendToDoctor?: () => void;
+  onDeleteImage?: () => void;
+  onClearAllImages?: () => void;
 }
 
 export const ControlsBar: React.FC<ControlsBarProps> = ({
@@ -39,6 +46,7 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
   baselineName,
   statusText,
   isLoading,
+  hasAnalysisResult,
   onPrev,
   onNext,
   onAnalyze,
@@ -47,6 +55,9 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
   onUpload,
   onOpenRoiModal,
   onOpenCamera,
+  onSendToDoctor,
+  onDeleteImage,
+  onClearAllImages,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,11 +90,11 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
         <button
           id="next"
           onClick={onNext}
-          disabled={totalImages <= 1 || isLoading}
+          disabled={totalImages === 0 || isLoading}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 font-medium text-xs md:text-sm transition-all border border-slate-200 hover:border-slate-300 active:scale-95 shadow-2xs cursor-pointer"
-          title="Next wound image in series (Right Arrow key)"
+          title={totalImages === 1 ? 'View or add next follow-up photo to track contraction vs baseline' : 'Next wound image in series (Right Arrow key)'}
         >
-          <span>Next</span>
+          <span>{totalImages === 1 ? 'Next Follow-up' : 'Next'}</span>
           <ChevronRight className="w-4 h-4 text-slate-500" />
         </button>
 
@@ -101,6 +112,20 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
           )}
           <span>{isLoading ? 'Analyzing...' : 'Analyze Image'}</span>
         </button>
+
+        {/* Send to Doctor Telemedicine Portal Button */}
+        {onSendToDoctor && (
+          <button
+            id="btn-send-doctor"
+            onClick={onSendToDoctor}
+            disabled={totalImages === 0 || isLoading}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-xs md:text-sm transition-all shadow-xs hover:shadow border border-blue-800 active:scale-95 cursor-pointer"
+            title="Dispatch wound image, segmentation metrics, and symptoms to Doctor Dashboard"
+          >
+            <Stethoscope className="w-3.5 h-3.5 text-blue-200" />
+            <span>Send to Doctor</span>
+          </button>
+        )}
 
         {/* Set Baseline */}
         <button
@@ -168,6 +193,33 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
         >
           <Camera className="w-4 h-4 text-slate-500" />
         </button>
+
+        {/* Delete Current Image */}
+        {onDeleteImage && totalImages > 0 && (
+          <button
+            id="btn-delete-current-image"
+            onClick={onDeleteImage}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 hover:border-rose-200 text-xs md:text-sm transition-all active:scale-95 shadow-2xs cursor-pointer"
+            title="Remove current image from queue"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+            <span className="hidden md:inline text-rose-600">Delete Photo</span>
+          </button>
+        )}
+
+        {/* Clear All Images (when multiple) */}
+        {onClearAllImages && totalImages > 1 && (
+          <button
+            id="btn-clear-all-images"
+            onClick={onClearAllImages}
+            disabled={isLoading}
+            className="hidden sm:flex items-center gap-1 px-2.5 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-400 hover:text-slate-600 border border-slate-200 text-xs transition-all active:scale-95 cursor-pointer"
+            title="Clear all photos from active queue"
+          >
+            <span>Clear Queue ({totalImages})</span>
+          </button>
+        )}
 
       </div>
 

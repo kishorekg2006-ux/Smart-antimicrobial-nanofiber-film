@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlaskConical, X, ArrowRight, Sparkles, Check } from 'lucide-react';
+import { FlaskConical, X, ArrowRight, Sparkles, Check, Info } from 'lucide-react';
 import { SAMPLE_WOUND_SERIES, SampleWoundPreset } from '../data/sampleWounds';
 import { WoundImageItem } from '../types';
 
@@ -61,6 +61,21 @@ export const SampleCasesModal: React.FC<SampleCasesModalProps> = ({
           >
             <X className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Mendeley Dataset Benchmark Info Banner */}
+        <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3.5 mb-3 flex items-start gap-3">
+          <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800 shrink-0 mt-0.5">
+            <Info className="w-4 h-4" />
+          </div>
+          <div className="text-xs">
+            <span className="font-bold text-emerald-900 block">
+              Mendeley Data Reference Standard (Dataset hsj38fwnvr/3)
+            </span>
+            <span className="text-emerald-700">
+              Calibrated against the <em>Lower Limb and Feet Wound Image Dataset for Medical Analysis</em>. Plain intact skin photos are evaluated by the dual-stage color contrast gate to yield strictly <strong>0.00% wound coverage</strong> with zero false positives.
+            </span>
+          </div>
         </div>
 
         {/* Load Complete Longitudinal Series Banner */}

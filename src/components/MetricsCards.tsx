@@ -39,6 +39,7 @@ export const MetricsCards: React.FC<MetricsCardsProps> = ({ result, baseline }) 
 
   // Determine condition color badge
   const getConditionColor = (cond: string) => {
+    if (cond.includes('No Wound Detected')) return 'bg-emerald-100 text-emerald-800 border-emerald-300 font-bold';
     if (cond.includes('Very Small')) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
     if (cond.includes('Small')) return 'bg-teal-50 text-teal-700 border-teal-200';
     if (cond.includes('Moderate')) return 'bg-amber-50 text-amber-700 border-amber-200';
@@ -145,8 +146,8 @@ export const MetricsCards: React.FC<MetricsCardsProps> = ({ result, baseline }) 
             </div>
           </div>
 
-          {/* Detailed Tissue Composition Spectrum */}
-          {result && result.wound_pixels > 0 && (
+          {/* Detailed Tissue Composition Spectrum or Intact Skin Confirmation */}
+          {result && result.wound_pixels > 0 ? (
             <div className="mt-2 pt-3 border-t border-slate-100">
               <div className="text-[11px] font-medium text-slate-500 mb-1.5 flex justify-between">
                 <span>Tissue Composition Breakdown</span>
@@ -179,6 +180,11 @@ export const MetricsCards: React.FC<MetricsCardsProps> = ({ result, baseline }) 
                 <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400" /> Slough ({result.yellow}%)</span>
                 <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-pink-400" /> Epithelium ({result.pink_tissue || 0}%)</span>
               </div>
+            </div>
+          ) : result && (
+            <div className="mt-2 pt-3 border-t border-slate-100 text-xs text-emerald-800 bg-emerald-50/70 p-2.5 rounded-lg border border-emerald-200">
+              <span className="font-semibold block">Intact Healthy Skin Dermis</span>
+              <span className="text-[11px] text-emerald-700">Computer vision segmentation confirms 0.00% active wound lesion.</span>
             </div>
           )}
         </div>
